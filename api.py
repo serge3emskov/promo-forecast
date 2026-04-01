@@ -10,12 +10,31 @@ import os
 
 app = FastAPI(title="Promo Sales Forecast API")
 
-# Загружаем модель
-model = joblib.load('promo_model.pkl')
-with open('model_metadata.json', 'r') as f:
-    metadata = json.load(f)
+# Пути к файлам модели
+MODEL_PATH = os.getenv('MODEL_PATH', 'promo_model.pkl')
+METADATA_PATH = os.getenv('METADATA_PATH', 'model_metadata.json')
+HISTORY_PATH = os.getenv('HISTORY_PATH', 'sales_history.csv')
 
-feature_cols = metadata['feature_cols']
+# Проверяем альтернативные пути (для Docker volumes)
+if not os.path.exists(MODEL_PATH) and os.path.exists(f'/app/models/{os.path.basename(MODEL_PATH)}'):
+    MODEL_PATH = f'/app/models/{os.path.basename(MODEL_PATH)}'
+if not os.path.exists(METADATA_PATH) and os.path.exists(f'/app/models/model_metadata.json'):
+    METADATA_PATH = '/app/models/model_metadata.json'
+if not os.path.exists(HISTORY_PATH) and os.path.exists(f'/app/data/sales_history.csv'):
+    HISTORY_PATH = '/app/data/sales_history.csv'
+
+# Загружаем модель
+try:
+    model = joblib.load(MODEL_PATH)
+    with open(METADATA_PATH, 'r') as f:
+        metadata = json.load(f)
+    print(f"Модель загружена из {MODEL_PATH}")
+except Exception as e:
+    print(f"Ошибка загрузки модели: {e}")
+    model = None
+    metadata = None
+
+feature_cols = metadata['feature_cols'] if metadata else []
 
 class PromoItem(BaseModel):
     sku: str
@@ -96,11 +115,14 @@ def prepare_features(sku: str, date: pd.Timestamp,
 async def forecast_promo_sales(request: ForecastRequest):
     """Прогноз продаж для промо-акций"""
     
+    if model is None:
+        raise HTTPException(status_code=503, detail="Модель не загружена")
+    
     # Загружаем исторические данные
-    if not os.path.exists('sales_history.csv'):
+    if not os.path.exists(HISTORY_PATH):
         raise HTTPException(status_code=400, detail="Исторические данные не найдены")
     
-    historical_df = pd.read_csv('sales_history.csv')
+    historical_df = pd.read_csv(HISTORY_PATH)
     historical_df['date'] = pd.to_datetime(historical_df['date'])
     
     # Создаем расписание промо
@@ -163,6 +185,8 @@ async def forecast_promo_sales(request: ForecastRequest):
 
 @app.get("/health")
 async def health_check():
+    if model is None:
+        return {"status": "error", "message": "Модель не загружена"}
     return {"status": "ok", "model_mape": metadata['test_mape']}
 
 if __name__ == "__main__":

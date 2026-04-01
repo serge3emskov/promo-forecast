@@ -50,7 +50,16 @@ def add_features(df):
     return df
 
 if __name__ == "__main__":
-    df = pd.read_csv('sales_history.csv')
+    import os
+    
+    # Проверяем наличие файла с данными
+    if os.path.exists('sales_history.csv'):
+        print("Используем существующий sales_history.csv")
+        df = pd.read_csv('sales_history.csv')
+    else:
+        print("Файл sales_history.csv не найден. Сначала запустите data_preparation.py")
+        exit(1)
+    
     df = add_features(df)
     df.to_csv('sales_with_features.csv', index=False)
     print(f"Признаки добавлены. Всего колонок: {len(df.columns)}")
