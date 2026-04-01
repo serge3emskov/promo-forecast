@@ -7,8 +7,16 @@ import joblib
 import json
 
 def train_model():
+    import os
+    
     # Загружаем данные
-    df = pd.read_csv('sales_with_features.csv')
+    if os.path.exists('sales_with_features.csv'):
+        print("Используем существующий sales_with_features.csv")
+        df = pd.read_csv('sales_with_features.csv')
+    else:
+        print("Файл sales_with_features.csv не найден. Сначала запустите feature_engineering.py")
+        exit(1)
+    
     df['date'] = pd.to_datetime(df['date'])
     
     # Разделяем на train/test (последние 60 дней - тест)
@@ -91,8 +99,13 @@ def train_model():
     print("\nВажность признаков:")
     print(feature_importance.head(10))
     
-    # Сохраняем модель
+    # Сохраняем модель в текущую директорию И в папку models/
     joblib.dump(final_model, 'promo_model.pkl')
+    
+    # Также сохраняем в models/ если папка существует
+    if os.path.exists('models'):
+        joblib.dump(final_model, 'models/promo_model.pkl')
+        print("Модель также сохранена в models/promo_model.pkl")
     
     # Сохраняем метаданные
     metadata = {
@@ -105,6 +118,12 @@ def train_model():
     
     with open('model_metadata.json', 'w') as f:
         json.dump(metadata, f, indent=2, default=float)
+    
+    # Также сохраняем в models/ если папка существует
+    if os.path.exists('models'):
+        with open('models/model_metadata.json', 'w') as f:
+            json.dump(metadata, f, indent=2, default=float)
+        print("Метаданные также сохранены в models/model_metadata.json")
     
     print("\nМодель сохранена в promo_model.pkl")
     print("Метаданные сохранены в model_metadata.json")
