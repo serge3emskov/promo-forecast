@@ -5,8 +5,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/app/data
-      - ./models:/app/models
+      - .:/app
     environment:
       - PYTHONUNBUFFERED=1
     healthcheck:
