@@ -1,0 +1,105 @@
+{
+  "feature_cols": [
+    "is_promo",
+    "discount",
+    "day_of_week",
+    "month",
+    "is_weekend",
+    "is_holiday",
+    "lag_1",
+    "lag_7",
+    "lag_14",
+    "lag_28",
+    "rolling_mean_7",
+    "rolling_mean_14",
+    "rolling_std_7",
+    "days_since_promo",
+    "promo_freq_28",
+    "sku_encoded"
+  ],
+  "cv_scores": [
+    {
+      "fold": 1,
+      "MAPE": 20.147347857399158,
+      "MAE": 15.77345956253083
+    },
+    {
+      "fold": 2,
+      "MAPE": 20.200075417989293,
+      "MAE": 15.642661605749469
+    },
+    {
+      "fold": 3,
+      "MAPE": 19.13683177662223,
+      "MAE": 15.654116965070202
+    }
+  ],
+  "test_mape": 17.868868411916672,
+  "test_mae": 16.243652114872503,
+  "feature_importance": [
+    {
+      "feature": "month",
+      "importance": 11.52463080108186
+    },
+    {
+      "feature": "rolling_mean_14",
+      "importance": 9.981891812071321
+    },
+    {
+      "feature": "discount",
+      "importance": 8.395619740142317
+    },
+    {
+      "feature": "lag_1",
+      "importance": 7.84525596992399
+    },
+    {
+      "feature": "rolling_mean_7",
+      "importance": 7.1764872028373485
+    },
+    {
+      "feature": "lag_28",
+      "importance": 6.853730198800848
+    },
+    {
+      "feature": "is_promo",
+      "importance": 6.633773831127692
+    },
+    {
+      "feature": "lag_14",
+      "importance": 6.571562980130654
+    },
+    {
+      "feature": "lag_7",
+      "importance": 6.54484052049939
+    },
+    {
+      "feature": "rolling_std_7",
+      "importance": 6.4254649077144705
+    },
+    {
+      "feature": "days_since_promo",
+      "importance": 6.177243863440623
+    },
+    {
+      "feature": "sku_encoded",
+      "importance": 5.653948069092674
+    },
+    {
+      "feature": "day_of_week",
+      "importance": 5.357375967181966
+    },
+    {
+      "feature": "is_weekend",
+      "importance": 4.446164028206515
+    },
+    {
+      "feature": "promo_freq_28",
+      "importance": 0.2415384106533174
+    },
+    {
+      "feature": "is_holiday",
+      "importance": 0.17047169709501298
+    }
+  ]
+}
