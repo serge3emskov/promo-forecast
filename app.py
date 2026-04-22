@@ -18,7 +18,7 @@ st.sidebar.header("Параметры промо")
 # Ввод товаров
 sku = st.sidebar.text_input("SKU товара", "SKU001")
 promo_start = st.sidebar.date_input("Начало промо", datetime.now())
-promo_end = st.sidebar.date_input("Конец промо", datetime.now() + timedelta(days=3))
+promo_end = st.sidebar.date_input("Конец промо", datetime.now() + timedelta(days=14))
 discount = st.sidebar.slider("Скидка (%)", 5, 50, 20)
 forecast_days = st.sidebar.number_input("Дней прогноза", 7, 30, 14)
 
