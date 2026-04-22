@@ -39,6 +39,9 @@ class ForecastResponse(BaseModel):
     forecast: List[ForecastItem]
     model_mape: float
     generated_at: str
+    total_forecast: float
+    actual_stock: float
+    order_quantity: float
 
 def prepare_features(sku: str, date: pd.Timestamp, 
                      historical_data: pd.DataFrame,
@@ -155,10 +158,32 @@ async def forecast_promo_sales(request: ForecastRequest):
                 discount=discount
             ))
     
+    # Считаем сумму прогноза за период промо
+    total_forecast = sum(f.predicted_sales for f in forecasts if f.is_promo)
+    
+    # Получаем фактический остаток на начало промо (последнее известное значение)
+    actual_stock = 0.0
+    for item in request.items:
+        promo_start_date = pd.to_datetime(item.promo_start)
+        sku_history = historical_df[historical_df['sku'] == item.sku].copy()
+        if len(sku_history) > 0:
+            # Берем последнее значение перед началом промо
+            before_promo = sku_history[sku_history['date'] < promo_start_date]
+            if len(before_promo) > 0:
+                actual_stock = before_promo.iloc[-1]['sales']
+            elif len(sku_history) > 0:
+                actual_stock = sku_history.iloc[-1]['sales']
+    
+    # Заказ = Прогноз - Факт
+    order_quantity = max(0, total_forecast - actual_stock)
+    
     return ForecastResponse(
         forecast=forecasts,
         model_mape=metadata['test_mape'],
-        generated_at=datetime.now().isoformat()
+        generated_at=datetime.now().isoformat(),
+        total_forecast=round(total_forecast, 2),
+        actual_stock=round(actual_stock, 2),
+        order_quantity=round(order_quantity, 2)
     )
 
 @app.get("/health")
