@@ -10,18 +10,26 @@ import os
 
 app = FastAPI(title="Promo Sales Forecast API")
 
-# Пути к файлам модели
-MODEL_PATH = os.getenv('MODEL_PATH', 'promo_model.pkl')
-METADATA_PATH = os.getenv('METADATA_PATH', 'model_metadata.json')
-HISTORY_PATH = os.getenv('HISTORY_PATH', 'sales_history.csv')
+# Определяем базовую директорию (для Docker это /app)
+# Проверяем наличие файлов модели в разных возможных локациях
+if os.path.exists('/app/promo_model.pkl'):
+    BASE_DIR = '/app'
+elif os.path.exists('promo_model.pkl'):
+    BASE_DIR = '.'
+else:
+    # По умолчанию используем текущую директорию или /app если работаем в контейнере
+    BASE_DIR = '/app' if os.path.exists('/app') else '.'
 
-# Проверяем альтернативные пути (для Docker volumes)
-if not os.path.exists(MODEL_PATH) and os.path.exists(f'/app/models/{os.path.basename(MODEL_PATH)}'):
-    MODEL_PATH = f'/app/models/{os.path.basename(MODEL_PATH)}'
-if not os.path.exists(METADATA_PATH) and os.path.exists(f'/app/models/model_metadata.json'):
-    METADATA_PATH = '/app/models/model_metadata.json'
-if not os.path.exists(HISTORY_PATH) and os.path.exists(f'/app/data/sales_history.csv'):
-    HISTORY_PATH = '/app/data/sales_history.csv'
+# Пути к файлам модели
+MODEL_PATH = os.getenv('MODEL_PATH', os.path.join(BASE_DIR, 'promo_model.pkl'))
+METADATA_PATH = os.getenv('METADATA_PATH', os.path.join(BASE_DIR, 'model_metadata.json'))
+HISTORY_PATH = os.getenv('HISTORY_PATH', os.path.join(BASE_DIR, 'sales_history.csv'))
+
+# Фоллбэк: если файлы не найдены по основному пути, ищем в корне /app
+if not os.path.exists(MODEL_PATH) and os.path.exists('/app/promo_model.pkl'):
+    MODEL_PATH = '/app/promo_model.pkl'
+    METADATA_PATH = '/app/model_metadata.json'
+    HISTORY_PATH = '/app/sales_history.csv'
 
 # Загружаем модель
 try:
