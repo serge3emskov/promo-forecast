@@ -43,11 +43,37 @@ if st.sidebar.button("Рассчитать прогноз"):
             data = response.json()
             forecast_df = pd.DataFrame(data['forecast'])
             
-            # Отображаем метрики
-            col1, col2 = st.columns(2)
-            col1.metric("MAPE модели", f"{data['model_mape']:.2f}%")
+            # Три карточки в самом верху
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                st.metric(
+                    label="📈 Прогноз",
+                    value=f"{data['total_forecast']:,.0f} шт",
+                    help="Сумма прогноза по количеству в штуках товара за период промоакции"
+                )
+            
+            with col2:
+                st.metric(
+                    label="📦 Факт",
+                    value=f"{data['actual_stock']:,.0f} шт",
+                    help="Фактический остаток товара на момент начала промоакции"
+                )
+            
+            with col3:
+                st.metric(
+                    label="🛒 Заказ",
+                    value=f"{data['order_quantity']:,.0f} шт",
+                    help="Заказ = Прогноз - Факт",
+                    delta=f"{data['order_quantity'] - data['actual_stock']:,.0f}" if data['order_quantity'] > 0 else None
+                )
+            
+            # Отображаем метрики модели
+            st.divider()
+            col_m1, col_m2 = st.columns(2)
+            col_m1.metric("MAPE модели", f"{data['model_mape']:.2f}%")
             total_sales = forecast_df['predicted_sales'].sum()
-            col2.metric("Прогноз продаж (шт)", f"{total_sales:,.0f}")
+            col_m2.metric("Прогноз продаж (шт) за весь период", f"{total_sales:,.0f}")
             
             # График
             fig = px.line(forecast_df, x='date', y='predicted_sales', 
