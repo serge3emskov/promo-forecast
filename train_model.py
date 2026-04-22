@@ -78,7 +78,7 @@ def train_model():
 iterations_list = list(range(step, max_iterations, step))
 if iterations_list[-1] < max_iterations:
     iterations_list.append(max_iterations)
-for iterations in iterations_list:
+    for iterations in iterations_list:
         final_model = CatBoostRegressor(
             iterations=iterations,
             learning_rate=0.05,
