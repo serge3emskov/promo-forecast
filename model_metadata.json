@@ -20,86 +20,86 @@
   "cv_scores": [
     {
       "fold": 1,
-      "MAPE": 20.586323138945403,
-      "MAE": 15.928380135019736
+      "MAPE": 20.785871751670328,
+      "MAE": 16.069779378218804
     },
     {
       "fold": 2,
-      "MAPE": 20.495956306976954,
-      "MAE": 15.687814249695053
+      "MAPE": 20.611971242156514,
+      "MAE": 15.902502038616436
     },
     {
       "fold": 3,
-      "MAPE": 19.447936297315195,
-      "MAE": 15.670610116992806
+      "MAPE": 21.00872682898669,
+      "MAE": 16.651571664907625
     }
   ],
-  "test_mape": 21.202358241172018,
-  "test_mae": 18.166294618723043,
+  "test_mape": 21.334810508824077,
+  "test_mae": 18.931143859244077,
   "feature_importance": [
     {
-      "feature": "month",
-      "importance": 13.062812022045524
-    },
-    {
-      "feature": "discount",
-      "importance": 9.034413085866559
-    },
-    {
-      "feature": "rolling_mean_14",
-      "importance": 8.68528536457679
-    },
-    {
-      "feature": "lag_1",
-      "importance": 7.38386297868679
-    },
-    {
-      "feature": "lag_28",
-      "importance": 7.25768653324437
-    },
-    {
-      "feature": "day_of_week",
-      "importance": 6.986531465685654
-    },
-    {
       "feature": "rolling_std_7",
-      "importance": 6.96226611839091
-    },
-    {
-      "feature": "days_since_promo",
-      "importance": 6.831902814300405
+      "importance": 4934
     },
     {
       "feature": "rolling_mean_7",
-      "importance": 6.735648688883672
+      "importance": 4763
     },
     {
-      "feature": "lag_14",
-      "importance": 6.180843716211911
+      "feature": "rolling_mean_14",
+      "importance": 4643
+    },
+    {
+      "feature": "lag_1",
+      "importance": 4203
     },
     {
       "feature": "lag_7",
-      "importance": 6.024939430528646
+      "importance": 4137
+    },
+    {
+      "feature": "lag_14",
+      "importance": 3849
+    },
+    {
+      "feature": "lag_28",
+      "importance": 3762
+    },
+    {
+      "feature": "days_since_promo",
+      "importance": 2194
+    },
+    {
+      "feature": "month",
+      "importance": 1619
+    },
+    {
+      "feature": "day_of_week",
+      "importance": 1137
     },
     {
       "feature": "sku_encoded",
-      "importance": 5.140218146955309
+      "importance": 775
+    },
+    {
+      "feature": "discount",
+      "importance": 304
     },
     {
       "feature": "is_promo",
-      "importance": 4.874951552417831
-    },
-    {
-      "feature": "is_weekend",
-      "importance": 3.806480685736374
-    },
-    {
-      "feature": "promo_freq_28",
-      "importance": 0.6869971511112081
+      "importance": 96
     },
     {
       "feature": "is_holiday",
-      "importance": 0.3451602453580491
+      "importance": 38
+    },
+    {
+      "feature": "is_weekend",
+      "importance": 0
+    },
+    {
+      "feature": "promo_freq_28",
+      "importance": 0
     }
   ]
 }

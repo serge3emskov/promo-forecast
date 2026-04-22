@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from catboost import CatBoostRegressor
+from lightgbm import LGBMRegressor
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.metrics import mean_absolute_percentage_error, mean_absolute_error
 import joblib
@@ -50,13 +50,12 @@ def train_model():
         X_tr, X_val = X_train.iloc[train_idx], X_train.iloc[val_idx]
         y_tr, y_val = y_train.iloc[train_idx], y_train.iloc[val_idx]
         
-        model = CatBoostRegressor(
-            iterations=500,
+        model = LGBMRegressor(
+            n_estimators=500,
             learning_rate=0.05,
-            depth=8,
-            loss_function='MAE',
-            verbose=0,
-            random_seed=42
+            max_depth=8,
+            random_seed=42,
+            verbose=-1
         )
         model.fit(X_tr, y_tr)
         
@@ -75,17 +74,16 @@ def train_model():
     
     final_model = None
     best_mape = float('inf')
-iterations_list = list(range(step, max_iterations, step))
-if iterations_list[-1] < max_iterations:
-    iterations_list.append(max_iterations)
+    iterations_list = list(range(step, max_iterations, step))
+    if iterations_list[-1] < max_iterations:
+        iterations_list.append(max_iterations)
     for iterations in iterations_list:
-        final_model = CatBoostRegressor(
-            iterations=iterations,
+        final_model = LGBMRegressor(
+            n_estimators=iterations,
             learning_rate=0.05,
-            depth=8,
-            loss_function='MAE',
-            verbose=0,
-            random_seed=42
+            max_depth=8,
+            random_seed=42,
+            verbose=-1
         )
         final_model.fit(X_train, y_train)
         
